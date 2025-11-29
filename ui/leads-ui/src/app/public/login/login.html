@@ -1,0 +1,43 @@
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Welcome Back</h3>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label for="email" class="form-label">User Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" formControlName="username"
+                            placeholder="User Name"
+                            [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+                        @if(loginForm.get('username')?.invalid && loginForm.get('username')?.touched){
+                        <div class="invalid-feedback">
+                            User Name is required.
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" class="form-control" id="password" formControlName="password"
+                            placeholder="********"
+                            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                        @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched){
+                        <div class="invalid-feedback">
+                            Password is required.
+                        </div>
+                        }
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="text-decoration-none">Forgot password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

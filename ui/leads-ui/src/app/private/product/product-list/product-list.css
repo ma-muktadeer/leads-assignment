@@ -1,0 +1,13 @@
+.product-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+}
+
+.table> :not(caption)>*>* {
+    padding: 1rem 0.5rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
