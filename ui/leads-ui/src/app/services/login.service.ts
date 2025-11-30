@@ -16,9 +16,13 @@ export class LoginService {
   private user: any | null = null;
 
   constructor(private http: HttpClient) { }
-  login2FakeUrl(username: string, password: string) {
+  login(username: string, password: string, loginSource: string) {
     this.isLoggedIn = true;
-    return this.http.post<any>(`${this.fakeAuthUrl}/login`, { username, password });
+    if (loginSource === 'fake') {
+      return this.http.post<any>(`${this.fakeAuthUrl}/login`, { username, password });
+    } else {
+      return this.http.post<any>(`${this.dbAuthUrl}/login`, { username, password });
+    }
   }
 
   saveSession(token: string, loginSource: string): void {
@@ -31,6 +35,10 @@ export class LoginService {
 
   isAuthenticated(): boolean {
     return this.sessionStorage.getItem(this.authToken) !== null;
+  }
+
+  getToken(): string | null{
+    return this.sessionStorage.getItem(this.authToken);
   }
 
   logout(): void {
