@@ -33,7 +33,6 @@ export class ProductList implements OnInit {
     {name: 'Electronics', value: `electronics`},
     {name: 'Jewelry', value: `jewelry`},
   ]);
-  // men’s clothing, women’s clothing, electronics, jewelry
 
   ngOnInit() {
     this.loadProducts();
