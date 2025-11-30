@@ -106,4 +106,22 @@ public class FakeStoreService {
             throw e;
         }
     }
+
+    public List<Product> getProductsByCategory(String category) {
+        try {
+            String url = API_URL + "/products/category/" + category;
+            logger.info("Fetching products from FakeStore API. api:productsCategory=[{}:{}] ", url, category);
+            String response = restClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .body(String.class);
+            // logger.info("raw response: {}", response);
+            List<Product> products = objectMapper.readValue(response, new TypeReference<List<Product>>() {
+            });
+            return products;
+        } catch (Exception e) {
+            logger.error("Error fetching products from FakeStore API", e);
+            throw e;
+        }
+    }
 }

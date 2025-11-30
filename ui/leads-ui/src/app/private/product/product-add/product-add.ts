@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../constants/product';
 import { ProductService } from '../../../services/product.service';
@@ -9,6 +9,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   imports: [FormsModule],
   templateUrl: './product-add.html',
   styleUrl: './product-add.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class ProductAdd {
   private readonly activeModal = inject(NgbActiveModal);
@@ -36,7 +38,7 @@ export class ProductAdd {
   }
 
   submit() {
-    if(this.saving()) {
+    if (this.saving()) {
       return;
     }
     debugger;

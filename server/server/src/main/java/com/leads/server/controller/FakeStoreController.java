@@ -28,9 +28,14 @@ public class FakeStoreController {
         return fakeStoreService.getProducts();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/products/get/{id}")
     public Product getProductById(@PathVariable Long id) throws Exception {
         return fakeStoreService.getProductById(id);
+    }
+
+    @GetMapping("/products/category/{category}")
+    public List<Product> getProductsByCategory(@PathVariable String category) throws Exception {
+        return fakeStoreService.getProductsByCategory(category);
     }
 
     @PostMapping("/products/add")
@@ -38,12 +43,12 @@ public class FakeStoreController {
         return fakeStoreService.createProduct(product);
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/products/edit/{id}")
     public Product updateProduct(@PathVariable Long id, @RequestBody Product product) throws Exception {
         return fakeStoreService.updateProduct(id, product);
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/products/delete/{id}")
     public void deleteProduct(@PathVariable Long id) throws Exception {
         fakeStoreService.deleteProductById(id);
     }
