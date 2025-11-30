@@ -28,12 +28,14 @@ export class Login {
     if (this.loginForm.valid) {
       console.log('Login data:', this.loginForm.value);
       // Handle login logic here
-      const res = this.loginService.login2FakeUrl(
+      const res = this.loginService.login(
         this.loginForm.value.username,
-        this.loginForm.value.password
+        this.loginForm.value.password,
+        this.loginForm.value.loginSource,
       );
       res.subscribe({
         next: (response) => {
+          debugger
           const token = response['token'];
           const loginSource = this.loginForm.get('loginSource')?.value;
           console.log('Login successful:', token);
@@ -45,7 +47,7 @@ export class Login {
           Swal.fire({
             icon: 'error',
             title: 'Login Failed',
-            text: error.error || 'Invalid username or password. Please try again.'
+            text: error.error?.error || error.error || 'Invalid username or password. Please try again.'
           });
         }
       });
