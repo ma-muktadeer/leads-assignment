@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from '../constants/product';
+import { LeadsService } from '../constants/leads-service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductService {
+export class FakeProductService implements LeadsService {
   private apiUrl = 'http://localhost:8080/api/fake-store';
 
   constructor(private http: HttpClient) { }
-
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/products`);
   }

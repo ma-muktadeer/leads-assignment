@@ -1,18 +1,16 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Product } from '../../../constants/product';
-import { ProductService } from '../../../services/product.service';
-import { NgbModal, NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import { FakeProductService } from '../../../services/fake-product.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductAdd } from '../product-add/product-add';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './filter.pipe';
-
-export interface Item {
-  name: string;
-  value: string;
-}
+import { Item } from '../../../constants/Item';
+import { LeadsService } from '../../../constants/leads-service';
+import { DbProductService } from '../../../services/db-product.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,7 +21,18 @@ export interface Item {
 
 export class ProductList implements OnInit {
 
-  private productService = inject(ProductService);
+  // private productService = computed<LeadsService>(() => {
+  //   debugger
+  //   if (this.module() === 'fake') {
+  //     return inject(FakeProductService);
+  //   } else if (this.module() === 'db') {
+  //     return inject(DbProductService);
+  //   }
+  //   else {
+  //     throw new Error('Invalid module');
+  //   }
+  // });
+  public productService = signal<LeadsService>(null);
   private readonly router = inject(Router);
   private model = inject(NgbModal);
   products = signal<Product[]>([]);
@@ -46,24 +55,35 @@ export class ProductList implements OnInit {
     if (child) {
       this.module.update(() => child.params['module']);
       console.log('Module param:', this.module());
+      this.buildService();
     }
     else {
       this.router.navigate(['/login']);
       return;
     }
-
   }
   ngOnInit() {
     this.loadProducts();
   }
+  private buildService() {
+      if (this.module() === 'fake') {
+      this.productService.update(() => inject(FakeProductService));
+    } else if (this.module() === 'db') {
+      this.productService.update(() => inject(DbProductService));
+      // this.productService.update(() => inject(FakeProductService));
+    }
+    else {
+      throw new Error('Invalid module');
+    }
+  }
 
-    goToPage(p: number) {
+  goToPage(p: number) {
     if (p >= 1 && p <= this.totalPages()) {
       this.page = p;
     }
   }
   private loadProducts() {
-    this.productService.getProducts().subscribe({
+    this.productService().getProducts().subscribe({
       next: (data) => {
         console.log('products list', data);
         this.products.update(() => data);
@@ -74,7 +94,7 @@ export class ProductList implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: err,
+          text: err.error?.error || err.error || err.message || 'An error occurred while fetching products.',
         });
       }
     });
@@ -85,7 +105,7 @@ export class ProductList implements OnInit {
     }
     this.isLoading.update(() => true);
     this.selectedItem.update(() => item);
-    this.productService.getProductsByCategory(this.selectedItem().value).subscribe({
+    this.productService().getProductsByCategory(this.selectedItem().value).subscribe({
       next: (data) => {
         console.log('products list', data);
 
@@ -102,6 +122,7 @@ export class ProductList implements OnInit {
       modalRef.componentInstance.product = signal<Product>(product);
     }
     modalRef.componentInstance.isEdit = signal<boolean>(isEdit);
+    modalRef.componentInstance.productService = this.productService();
 
     modalRef.result.then((result) => {
       if (result) {
@@ -126,7 +147,7 @@ export class ProductList implements OnInit {
       cancelButtonText: 'No, cancel!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.productService.deleteProduct(id).subscribe({
+        this.productService().deleteProduct(id).subscribe({
           next: () => {
             this.removeProductFromList(id);
           },

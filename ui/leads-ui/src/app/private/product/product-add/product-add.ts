@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../constants/product';
-import { ProductService } from '../../../services/product.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LeadsService } from '../../../constants/leads-service';
 
 @Component({
   selector: 'app-product-add',
@@ -14,7 +14,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ProductAdd {
   private readonly activeModal = inject(NgbActiveModal);
-  private productService = inject(ProductService);
+  public productService!: WritableSignal<LeadsService>;
 
   isEdit = signal<boolean>(false);
   saving = signal<boolean>(false);
@@ -29,8 +29,9 @@ export class ProductAdd {
     rating: { rate: 0, count: 0 }
   });
 
+  constructor() {
+  }
   ngOnInit() {
-
   }
 
   close(result?: any) {
@@ -44,12 +45,12 @@ export class ProductAdd {
     debugger;
     this.saving.update(() => true);
     if (this.isEdit()) {
-      this.productService.updateProduct(this.product().id, this.product()).subscribe({
+      this.productService().updateProduct(this.product().id, this.product()).subscribe({
         next: () => this.close(this.product()),
         error: (err) => { console.error(err); this.saving.update(() => false); }
       });
     } else {
-      this.productService.addProduct(this.product()).subscribe({
+      this.productService().addProduct(this.product()).subscribe({
         next: (res: any) => this.close(res),
         error: (err) => { console.error(err); this.saving.update(() => false); }
       });
