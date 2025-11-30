@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/api/public/**")
+                                .requestMatchers("/api/public/**", "/api/fake-store/**")
                                 .permitAll()
                                 .requestMatchers("/api/app/**")
                                 .authenticated()
