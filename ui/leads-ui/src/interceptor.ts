@@ -25,7 +25,7 @@ export const interceptor: HttpInterceptorFn = (req, next) => {
         withCredentials: true,
         setHeaders: {
           'Content-Type': 'application/json',
-          'Authorization': loginService.getToken(),
+          'Authorization': `Bearer ${loginService.getToken()}`,
         },
       });
     }

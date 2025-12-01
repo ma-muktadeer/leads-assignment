@@ -132,10 +132,6 @@ public class JwtTokenProvider {
 		if (tokenUserId == null || !tokenUserId.equals(userPrincipal.getId())) {
 			return false;
 		}
-		String tokenDeviceFingerprint = claims.get("device", String.class);
-		if (!claims.getSubject().equals(userPrincipal.getUsername())
-				|| !StringUtils.hasLength(tokenDeviceFingerprint))
-			return false;
 		return true;
 	}
 }

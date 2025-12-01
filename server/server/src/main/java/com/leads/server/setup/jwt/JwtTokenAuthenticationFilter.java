@@ -75,7 +75,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);
         }
-        chain.doFilter(request, response);
     }
 
     @Override

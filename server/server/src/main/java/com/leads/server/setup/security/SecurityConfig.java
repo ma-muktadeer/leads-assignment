@@ -7,17 +7,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import com.leads.server.setup.jwt.JwtTokenAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     @Autowired
     private CorsConfigurationSource corsConfigurationSource;
+    @Lazy
+    @Autowired
+    private JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -25,6 +32,7 @@ public class SecurityConfig {
                 .headers(this::headers)
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/api/public/**", "/api/fake-store/**")
