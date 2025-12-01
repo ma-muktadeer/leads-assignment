@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../constants/product';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LeadsService } from '../../../constants/leads-service';
+import { Item } from '../../../constants/Item';
 
 @Component({
   selector: 'app-product-add',
@@ -20,7 +21,7 @@ export class ProductAdd {
   saving = signal<boolean>(false);
 
   product = signal<Product>({
-    id: 0,
+    id: null,
     title: '',
     price: 0,
     category: '',
@@ -28,6 +29,12 @@ export class ProductAdd {
     image: '',
     rating: { rate: 0, count: 0 }
   });
+  itemList = signal<Item[]>([
+    { name: 'Men\'s Clothing', value: `men's clothing` },
+    { name: 'Women\'s Clothing', value: `women's clothing` },
+    { name: 'Electronics', value: `electronics` },
+    { name: 'Jewelry', value: `jewelry` },
+  ]);
 
   constructor() {
   }

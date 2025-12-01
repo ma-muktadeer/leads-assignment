@@ -1,19 +1,20 @@
-.preview-image{
+.preview-image {
   max-height: 280px;
   object-fit: contain;
   border-radius: 6px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
-.placeholder-image{
-  display:inline-flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  width:180px;
-  height:120px;
-  border-radius:8px;
-  background:linear-gradient(180deg,#f8f9fa,#fff);
-  border:1px dashed #e9ecef;
-  color:#6c757d;
-  margin:8px auto;
+
+.placeholder-image {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 120px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f8f9fa, #fff);
+  border: 1px dashed #e9ecef;
+  color: #6c757d;
+  margin: 8px auto;
 }

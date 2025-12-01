@@ -60,7 +60,6 @@ export class ProductList implements OnInit {
       this.productService.update(() => inject(FakeProductService));
     } else if (this.module() === 'db') {
       this.productService.update(() => inject(DbProductService));
-      // this.productService.update(() => inject(FakeProductService));
     }
     else {
       throw new Error('Invalid module');
@@ -121,7 +120,7 @@ export class ProductList implements OnInit {
       modalRef.componentInstance.product = signal<Product>(product);
     }
     modalRef.componentInstance.isEdit = signal<boolean>(isEdit);
-    modalRef.componentInstance.productService = this.productService();
+    modalRef.componentInstance.productService = this.productService;
 
     modalRef.result.then((result) => {
       if (result) {
@@ -129,8 +128,10 @@ export class ProductList implements OnInit {
           this.products.update((products) =>
             products.map((p) => (p.id === result.id ? result : p))
           );
+          this.productPageable.update(() => this.buildProductPageable());
         } else {
           this.products.update((products) => [...products, result]);
+          this.productPageable.update(() => this.buildProductPageable());
         }
       }
     });
