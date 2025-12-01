@@ -21,21 +21,11 @@ import { DbProductService } from '../../../services/db-product.service';
 
 export class ProductList implements OnInit {
 
-  // private productService = computed<LeadsService>(() => {
-  //   debugger
-  //   if (this.module() === 'fake') {
-  //     return inject(FakeProductService);
-  //   } else if (this.module() === 'db') {
-  //     return inject(DbProductService);
-  //   }
-  //   else {
-  //     throw new Error('Invalid module');
-  //   }
-  // });
   public productService = signal<LeadsService>(null);
   private readonly router = inject(Router);
   private model = inject(NgbModal);
   products = signal<Product[]>([]);
+  productPageable = signal<Product[]>([]);
   searchText = signal<string>('');
   selectedItem = signal<Item>(null);
   readonly module = signal<string>('');
@@ -66,7 +56,7 @@ export class ProductList implements OnInit {
     this.loadProducts();
   }
   private buildService() {
-      if (this.module() === 'fake') {
+    if (this.module() === 'fake') {
       this.productService.update(() => inject(FakeProductService));
     } else if (this.module() === 'db') {
       this.productService.update(() => inject(DbProductService));
@@ -77,9 +67,17 @@ export class ProductList implements OnInit {
     }
   }
 
+  private buildProductPageable() {
+    const start = (this.page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.totalPages.update(() => Math.ceil(this.products().length / this.pageSize));
+    console.log(this.totalPages());
+    return this.products().slice(start, end);
+  }
   goToPage(p: number) {
     if (p >= 1 && p <= this.totalPages()) {
       this.page = p;
+      this.productPageable.update(() => this.buildProductPageable());
     }
   }
   private loadProducts() {
@@ -88,6 +86,7 @@ export class ProductList implements OnInit {
         console.log('products list', data);
         this.products.update(() => data);
         this.isLoading.update(() => false);
+        this.productPageable.update(() => this.buildProductPageable());
       },
       error: (err) => {
         console.error('Error fetching products:', err)
@@ -108,9 +107,9 @@ export class ProductList implements OnInit {
     this.productService().getProductsByCategory(this.selectedItem().value).subscribe({
       next: (data) => {
         console.log('products list', data);
-
         this.products.update(() => data)
         this.isLoading.update(() => false);
+        this.productPageable.update(() => this.buildProductPageable());
       },
       error: (err) => console.error('Error fetching products:', err)
     });
