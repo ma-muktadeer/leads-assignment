@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { LoginService } from '../../services/login.service';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { Session } from '../../services/session';
 
 @Component({
   selector: 'app-login',
