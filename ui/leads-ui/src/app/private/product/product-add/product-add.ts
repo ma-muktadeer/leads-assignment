@@ -39,6 +39,17 @@ export class ProductAdd {
   constructor() {
   }
   ngOnInit() {
+    if (this.isEdit() && this.product()?.id) {
+      this.loadProduct();
+    }
+  }
+
+  private loadProduct() {
+    debugger
+    this.productService().getProduct(this.product().id).subscribe({
+      next: (data) => this.product.update(() => data),
+      error: (err) => console.error(err)
+    });
   }
 
   close(result?: any) {

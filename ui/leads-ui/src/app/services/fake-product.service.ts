@@ -19,7 +19,7 @@ export class FakeProductService implements LeadsService {
     return this.http.get<Product[]>(`${this.apiUrl}/products/category/${category}`);
   }
   getProduct(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/products/get/${id}`);
   }
 
   addProduct(product: Product): Observable<Product> {

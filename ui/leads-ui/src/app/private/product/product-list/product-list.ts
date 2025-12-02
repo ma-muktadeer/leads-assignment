@@ -159,5 +159,6 @@ export class ProductList implements OnInit {
 
   private removeProductFromList(id: number) {
     this.products.update((products) => products.filter((p) => p.id !== id));
+    this.productPageable.update(() => this.buildProductPageable());
   }
 }
